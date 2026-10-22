@@ -1,0 +1,97 @@
+{
+  "sladovi": [
+    {
+      "id": 1,
+      "naziv": "Pilsner Malt",
+      "kategorija": "base",
+      "ebc": 3
+    },
+    {
+      "id": 2,
+      "naziv": "Munich Malt",
+      "kategorija": "base",
+      "ebc": 17
+    },
+    {
+      "id": 3,
+      "naziv": "Crystal / Caramel",
+      "kategorija": "specialty",
+      "ebc": 246
+    },
+    {
+      "id": 4,
+      "naziv": "Biscuit Malt",
+      "kategorija": "specialty",
+      "ebc": 55
+    },
+    {
+      "id": 5,
+      "naziv": "Chocolate Malt",
+      "kategorija": "roasted",
+      "ebc": 1042
+    },
+    {
+      "id": 6,
+      "naziv": "Roasted Barley",
+      "kategorija": "roasted",
+      "ebc": 1079
+    }
+  ],
+  "pitanja": [
+    {
+      "id": 1,
+      "pitanje": "Koji je latinski naziv ječma?",
+      "odgovori": [
+        "Triticum aestivum",
+        "Hordeum vulgare",
+        "Avena sativa",
+        "Secale cereale"
+      ],
+      "tocan_odgovor": 1
+    },
+    {
+      "id": 2,
+      "pitanje": "Koji korak sladovanja zaustavlja klijanje?",
+      "odgovori": [
+        "Močenje",
+        "Ukomljavanje",
+        "Sušenje",
+        "Cijeđenje"
+      ],
+      "tocan_odgovor": 2
+    },
+    {
+      "id": 3,
+      "pitanje": "Kako se zove slatka tekućina dobivena ukomljavanjem slada?",
+      "odgovori": [
+        "Sladovina",
+        "Mošt",
+        "Medovina",
+        "Salamura"
+      ],
+      "tocan_odgovor": 0
+    }
+  ],
+  "rezultati": [
+    {
+      "korisnik": "korisnik_1",
+      "bodovi": 1
+    },
+    {
+      "korisnik": "korisnik_2",
+      "bodovi": 3
+    },
+    {
+      "korisnik": "korisnik_3",
+      "bodovi": 1
+    },
+    {
+      "korisnik": "korisnik_4",
+      "bodovi": 3
+    },
+    {
+      "korisnik": "korisnik_5",
+      "bodovi": 2
+    }
+  ]
+}
