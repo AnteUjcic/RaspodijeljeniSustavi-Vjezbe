@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barley &amp; Beer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" v-cloak>
+    <header class="site-header">
+      <nav class="nav">
+        <a href="#" class="logo">🌾 Barley &amp; Beer</a>
+        <button class="nav-toggle" aria-label="Toggle menu" :aria-expanded="navOpen" @click="navOpen = !navOpen">☰</button>
+        <ul class="nav-links" :class="{ open: navOpen }">
+          <li v-for="link in navLinks" :key="link.href">
+            <a :href="link.href" @click="navOpen = false">{{ link.label }}</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1>From Field to Glass</h1>
+        <p>Barley is the backbone of beer. Discover how a humble cereal grain becomes the sugars, colour and body of the world's favourite brew.</p>
+        <a href="#about" class="btn">Start exploring</a>
+      </div>
+    </section>
+
+    <main>
+      <section id="about" class="section">
+        <h2>What is barley?</h2>
+        <div class="two-col">
+          <div>
+            <p><strong>Barley</strong> (<em>Hordeum vulgare</em>) is a cereal grain of the grass family, first domesticated in the Fertile Crescent around 10,000 years ago. It is one of the oldest cultivated crops and today ranks among the most widely grown grains in the world.</p>
+            <p>About a third of the global barley harvest is used for malting, mostly for beer and whisky. Brewers love barley because its husk acts as a natural filter during brewing, and its kernels are rich in starch and the enzymes needed to convert that starch into fermentable sugar.</p>
+          </div>
+          <div class="cards">
+            <div class="card" v-for="v in barleyVarieties" :key="v.name">
+              <h3>{{ v.name }}</h3>
+              <p>{{ v.text }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="malting" class="section alt">
+        <h2>The malting process</h2>
+        <p class="lead">Raw barley can't be brewed directly. It first has to be <strong>malted</strong>, a controlled germination that unlocks its enzymes.</p>
+        <ol class="steps">
+          <li v-for="(step, i) in maltingSteps" :key="step.title">
+            <span class="step-num">{{ i + 1 }}</span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.text }}</p>
+          </li>
+        </ol>
+      </section>
+
+      <section id="malts" class="section">
+        <h2>Malt types</h2>
+        <p class="lead">Different kilning and roasting turn the same barley into very different malts. Filter by category:</p>
+        <div class="filters" role="group" aria-label="Filter malts">
+          <button
+            v-for="f in filters"
+            :key="f.value"
+            class="filter"
+            :class="{ active: filter === f.value }"
+            @click="filter = f.value"
+          >{{ f.label }}</button>
+        </div>
+        <div class="malt-grid">
+          <article class="malt" v-for="m in filteredMalts" :key="m.name">
+            <div class="malt-swatch" :style="{ background: m.swatch }"></div>
+            <div class="malt-body">
+              <span class="tag">{{ m.category }}</span>
+              <h3>{{ m.name }}</h3>
+              <p class="malt-meta">Colour: {{ m.ebc }} EBC</p>
+              <p><strong>Flavour:</strong> {{ m.flavor }}</p>
+              <p><strong>Used in:</strong> {{ m.use }}</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="brewing" class="section alt">
+        <h2>How barley becomes beer</h2>
+        <div class="timeline">
+          <div class="tl-item" v-for="step in brewingSteps" :key="step.title">
+            <h3>{{ step.title }}</h3>
+            <p v-html="step.text"></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="quiz" class="section">
+        <h2>Quick quiz</h2>
+        <div class="quiz">
+          <template v-if="!finished">
+            <p class="quiz-question">{{ current + 1 }}/{{ quiz.length }}: {{ question.q }}</p>
+            <div class="quiz-options">
+              <button
+                v-for="(opt, i) in question.options"
+                :key="opt"
+                :disabled="selected !== null"
+                :class="{
+                  correct: selected !== null && i === question.answer,
+                  wrong: selected === i && i !== question.answer
+                }"
+                @click="answer(i)"
+              >{{ opt }}</button>
+            </div>
+            <p class="quiz-feedback" aria-live="polite">{{ feedback }}</p>
+            <button v-if="selected !== null" class="btn" @click="next">
+              {{ current < quiz.length - 1 ? "Next question" : "See result" }}
+            </button>
+          </template>
+          <template v-else>
+            <p class="quiz-question">You scored {{ score }} out of {{ quiz.length }}!</p>
+            <p class="quiz-feedback" aria-live="polite">
+              {{ score === quiz.length ? "Master brewer! 🏆" : "Keep learning, and cheers! 🌾" }}
+            </p>
+            <button class="btn" @click="restart">Play again</button>
+          </template>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Barley &amp; Beer · a static demo site · Please drink responsibly.</p>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/vue@3.4.38/dist/vue.global.prod.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
