@@ -1,2 +1,2 @@
 https://raspodijeljenisustavi-vjezbe-back-end.onrender.com/api/health
-
+https://raspodijeljenisustavi-vjezbe-back-end.onrender.com/api/malts?category=roasted
