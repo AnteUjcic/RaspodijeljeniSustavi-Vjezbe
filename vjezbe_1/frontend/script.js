@@ -1,50 +1,13 @@
-const { createApp, ref, computed } = Vue;
+const { createApp, ref, computed, watch, onMounted } = Vue;
 
-// Malt data: colour is given in EBC, swatch is an approximate hex colour
-const malts = [
-  { name: "Pilsner Malt", category: "base", ebc: "3–4", swatch: "#f3e2a0",
-    flavor: "Light, clean, slightly grainy and sweet.",
-    use: "Pilsners, lagers, Belgian ales." },
-  { name: "Pale Ale Malt", category: "base", ebc: "5–7", swatch: "#e9c96e",
-    flavor: "Biscuity, a bit fuller than pilsner malt.",
-    use: "Pale ales, IPAs, bitters." },
-  { name: "Munich Malt", category: "base", ebc: "15–25", swatch: "#d29a3e",
-    flavor: "Rich, malty, bready.",
-    use: "Märzen, bock, dunkel." },
-  { name: "Vienna Malt", category: "base", ebc: "6–10", swatch: "#e2b45a",
-    flavor: "Toasty with a light nuttiness.",
-    use: "Vienna lager, Märzen." },
-  { name: "Crystal / Caramel", category: "specialty", ebc: "30–300", swatch: "#b8661f",
-    flavor: "Caramel, toffee, dried fruit.",
-    use: "Amber ales, bitters, adds body and sweetness." },
-  { name: "Biscuit Malt", category: "specialty", ebc: "45–60", swatch: "#b97a34",
-    flavor: "Toasted bread, biscuit, crackers.",
-    use: "Brown ales, English ales." },
-  { name: "Chocolate Malt", category: "roasted", ebc: "900–1200", swatch: "#4a2a14",
-    flavor: "Cocoa, coffee, roasty.",
-    use: "Porters, stouts, brown ales." },
-  { name: "Roasted Barley", category: "roasted", ebc: "1000–1500", swatch: "#24140a",
-    flavor: "Sharp, dry, espresso-like roast.",
-    use: "Irish dry stout." },
-];
+// Same origin when served by the backend; fall back to a local server when index.html is opened as a file
+const API_BASE = location.protocol === "file:" ? "http://localhost:3000" : "";
 
-const quiz = [
-  { q: "What is the Latin name of barley?",
-    options: ["Triticum aestivum", "Hordeum vulgare", "Avena sativa", "Secale cereale"],
-    answer: 1 },
-  { q: "Which step of malting stops germination?",
-    options: ["Steeping", "Mashing", "Kilning", "Lautering"],
-    answer: 2 },
-  { q: "What is the sugary liquid made from mashed malt called?",
-    options: ["Wort", "Must", "Mead", "Brine"],
-    answer: 0 },
-  { q: "Which malt is typical for an Irish dry stout?",
-    options: ["Pilsner malt", "Vienna malt", "Roasted barley", "Munich malt"],
-    answer: 2 },
-  { q: "Why are barley husks useful in brewing?",
-    options: ["They add alcohol", "They act as a natural filter", "They add bitterness", "They feed the yeast"],
-    answer: 1 },
-];
+async function api(path, options) {
+  const res = await fetch(API_BASE + "/api" + path, options);
+  if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+  return res.json();
+}
 
 const navLinks = [
   { href: "#about", label: "About Barley" },
@@ -87,38 +50,67 @@ const filters = [
 
 createApp({
   setup() {
+    const error = ref("");
+
     // Mobile nav toggle
     const navOpen = ref(false);
 
-    // Malt grid with filtering
+    // Malt grid, filtered on the server
     const filter = ref("all");
-    const filteredMalts = computed(() =>
-      filter.value === "all" ? malts : malts.filter((m) => m.category === filter.value)
-    );
+    const malts = ref([]);
 
-    // Quiz
+    async function loadMalts() {
+      try {
+        malts.value = await api(`/malts?category=${filter.value}`);
+      } catch (e) {
+        error.value = "Could not load data from the server.";
+      }
+    }
+    watch(filter, loadMalts);
+
+    // Quiz, answers are checked by the server
+    const quiz = ref([]);
     const current = ref(0);
     const score = ref(0);
     const selected = ref(null);
+    const result = ref(null); // { correct, answer } from the server
     const finished = ref(false);
-    const question = computed(() => quiz[current.value]);
+    const question = computed(() => quiz.value[current.value]);
+
+    async function loadQuiz() {
+      try {
+        quiz.value = await api("/quiz");
+      } catch (e) {
+        error.value = "Could not load data from the server.";
+      }
+    }
 
     const feedback = computed(() => {
-      if (selected.value === null) return "";
-      const item = question.value;
-      return selected.value === item.answer
+      if (!result.value) return "";
+      return result.value.correct
         ? "Correct! 🍺"
-        : `Not quite. The answer is "${item.options[item.answer]}".`;
+        : `Not quite. The answer is "${question.value.options[result.value.answer]}".`;
     });
 
-    function answer(i) {
+    async function answer(i) {
       selected.value = i;
-      if (i === question.value.answer) score.value++;
+      try {
+        result.value = await api(`/quiz/${question.value.id}/answer`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ choice: i }),
+        });
+        if (result.value.correct) score.value++;
+      } catch (e) {
+        selected.value = null;
+        error.value = "Could not check the answer, please try again.";
+      }
     }
 
     function next() {
       selected.value = null;
-      if (current.value < quiz.length - 1) current.value++;
+      result.value = null;
+      if (current.value < quiz.value.length - 1) current.value++;
       else finished.value = true;
     }
 
@@ -126,13 +118,19 @@ createApp({
       current.value = 0;
       score.value = 0;
       selected.value = null;
+      result.value = null;
       finished.value = false;
     }
 
+    onMounted(() => {
+      loadMalts();
+      loadQuiz();
+    });
+
     return {
-      navLinks, barleyVarieties, maltingSteps, brewingSteps, filters, quiz,
-      navOpen, filter, filteredMalts,
-      current, score, selected, finished, question, feedback,
+      navLinks, barleyVarieties, maltingSteps, brewingSteps, filters,
+      error, navOpen, filter, malts,
+      quiz, current, score, selected, result, finished, question, feedback,
       answer, next, restart,
     };
   },

@@ -69,8 +69,9 @@
             @click="filter = f.value"
           >{{ f.label }}</button>
         </div>
+        <p v-if="error" class="lead">{{ error }}</p>
         <div class="malt-grid">
-          <article class="malt" v-for="m in filteredMalts" :key="m.name">
+          <article class="malt" v-for="m in malts" :key="m.name">
             <div class="malt-swatch" :style="{ background: m.swatch }"></div>
             <div class="malt-body">
               <span class="tag">{{ m.category }}</span>
@@ -96,7 +97,9 @@
       <section id="quiz" class="section">
         <h2>Quick quiz</h2>
         <div class="quiz">
-          <template v-if="!finished">
+          <p v-if="error" class="quiz-feedback">{{ error }}</p>
+          <p v-if="!question" class="quiz-question">Loading quiz…</p>
+          <template v-else-if="!finished">
             <p class="quiz-question">{{ current + 1 }}/{{ quiz.length }}: {{ question.q }}</p>
             <div class="quiz-options">
               <button
@@ -104,14 +107,14 @@
                 :key="opt"
                 :disabled="selected !== null"
                 :class="{
-                  correct: selected !== null && i === question.answer,
-                  wrong: selected === i && i !== question.answer
+                  correct: result && i === result.answer,
+                  wrong: result && selected === i && i !== result.answer
                 }"
                 @click="answer(i)"
               >{{ opt }}</button>
             </div>
             <p class="quiz-feedback" aria-live="polite">{{ feedback }}</p>
-            <button v-if="selected !== null" class="btn" @click="next">
+            <button v-if="result" class="btn" @click="next">
               {{ current < quiz.length - 1 ? "Next question" : "See result" }}
             </button>
           </template>
