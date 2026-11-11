@@ -94,3 +94,6 @@ pitanja za kviz (lista) i rezultate korisnika (tablica).
 
 Javni URL frontend aplikacije (iz vježbe 1, nadograđen ovom vježbom):
 `https://raspodijeljenisustavi-vjezbe.onrender.com/`
+
+
+Da, necu lagat claude mi je ovo pomoga napisat nisam toliko jezično sposoban 
