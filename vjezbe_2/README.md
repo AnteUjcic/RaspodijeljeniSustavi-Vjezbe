@@ -39,7 +39,7 @@ Svaka korutina se izvršava do kraja (uključujući
 čekanja zbrajaju.
 
 **Koliko traje izvođenje programa pri konkurentnoj jednodretvenoj obradi? Zašto?**
-Konkurentna obrada traje *2.28 s*, vrijeme najduže korutine
+Konkurentna obrada traje *2.28 s*, vrijeme najduže korutine.
 (`dohvati_slad`, 2.28 s). Kada se korutine pokrenu putem `asyncio.gather()`, sve tri
 odmah predaju kontrolu *event loopu* čim dođu do `await asyncio.sleep()`. Event loop
 tada "čeka" sve njih istovremeno (jedna dretva, ali više istovremeno otvorenih
