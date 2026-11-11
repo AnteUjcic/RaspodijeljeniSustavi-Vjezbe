@@ -15,6 +15,7 @@ const navLinks = [
   { href: "#malts", label: "Malt Types" },
   { href: "#brewing", label: "Brewing" },
   { href: "#quiz", label: "Quiz" },
+  { href: "#podaci", label: "Podaci (V2)" },
 ];
 
 const barleyVarieties = [
@@ -125,6 +126,7 @@ createApp({
     onMounted(() => {
       loadMalts();
       loadQuiz();
+      loadPodaci();
     });
 
     return {
@@ -132,6 +134,7 @@ createApp({
       error, navOpen, filter, malts,
       quiz, current, score, selected, result, finished, question, feedback,
       answer, next, restart,
+      podaci, podaciError,
     };
   },
 }).mount("#app");

@@ -215,6 +215,28 @@ a { color: var(--accent-dark); }
 .quiz-options button.wrong { background: #f8dcd6; border-color: #b8513c; }
 .quiz-feedback { min-height: 1.5em; font-weight: 600; }
 
+/* Vježba 2: sintetički podaci */
+.podaci-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+.podaci-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+.podaci-card h3 { margin-top: 0; color: var(--accent-dark); }
+.podaci-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.podaci-table th, .podaci-table td {
+  text-align: left;
+  padding: 0.4rem 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+.podaci-list { padding-left: 1.1rem; margin: 0; }
+.podaci-list li { margin-bottom: 0.5rem; }
+
 /* Footer */
 .site-footer {
   text-align: center;

@@ -127,6 +127,50 @@
           </template>
         </div>
       </section>
+      <section id="podaci" class="section alt">
+        <h2>Vježba 2: Sintetički podaci</h2>
+        <p class="lead">
+          Podaci dohvaćeni konkurentno (<code>asyncio.gather</code>) iz
+          <code>podaci.json</code>, generiranog Python programom koji simulira
+          tri neovisna izvora podataka.
+        </p>
+        <p v-if="podaciError" class="lead">{{ podaciError }}</p>
+        <div v-else class="podaci-grid">
+          <div class="podaci-card">
+            <h3>🌾 Sladovi</h3>
+            <table class="podaci-table">
+              <thead><tr><th>Naziv</th><th>Kategorija</th><th>EBC</th></tr></thead>
+              <tbody>
+                <tr v-for="s in podaci.sladovi" :key="s.id">
+                  <td>{{ s.naziv }}</td>
+                  <td>{{ s.kategorija }}</td>
+                  <td>{{ s.ebc }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="podaci-card">
+            <h3>❓ Pitanja za kviz</h3>
+            <ul class="podaci-list">
+              <li v-for="p in podaci.pitanja" :key="p.id">{{ p.pitanje }}</li>
+            </ul>
+          </div>
+
+          <div class="podaci-card">
+            <h3>🏆 Rezultati korisnika</h3>
+            <table class="podaci-table">
+              <thead><tr><th>Korisnik</th><th>Bodovi</th></tr></thead>
+              <tbody>
+                <tr v-for="r in podaci.rezultati" :key="r.korisnik">
+                  <td>{{ r.korisnik }}</td>
+                  <td>{{ r.bodovi }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
