@@ -94,8 +94,3 @@ pitanja za kviz (lista) i rezultate korisnika (tablica).
 
 Javni URL frontend aplikacije (iz vježbe 1, nadograđen ovom vježbom):
 `https://raspodijeljenisustavi-vjezbe.onrender.com/`
-
-**Napomena:** frontend treba ponovno deployati na Render.com (git push na
-`main`, Render automatski redeploya statičke datoteke) da bi se na javnom
-URL-u vidjela nova sekcija "Vježba 2: Sintetički podaci" s učitanim
-`podaci.json`. Nakon redeploya provjeriti prikazuju li se podaci na stranici.
